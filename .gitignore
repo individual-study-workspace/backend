@@ -36,13 +36,17 @@ out/
 ### 환경 설정 (yaml 전체 제외) ###
 *.yaml
 *.yml
+*.properties
+# 예외: 커밋 대상 yml (secret 없음)
+!**/src/main/resources/**/application.yml
+!**/src/main/resources/**/application-*.yml.template
+!**/src/test/resources/**/application*.yml
 
 ### Claude Code ###
-CLAUDE.md
-docs/
 *.md
+# 예외: 설계 문서 및 운영 가이드
+!docs/**/*.md
 
 ### OS ###
 .DS_Store
 Thumbs.db
-.claude
