@@ -41,6 +41,7 @@ out/
 !**/src/main/resources/**/application.yml
 !**/src/main/resources/**/application-*.yml.template
 !**/src/test/resources/**/application*.yml
+!docker-compose.yml
 
 ### Claude Code ###
 *.md
