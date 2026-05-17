@@ -44,8 +44,9 @@ out/
 
 ### Claude Code ###
 *.md
-# 예외: 설계 문서 및 운영 가이드
+# 예외: 설계 문서, 운영 가이드, repo 루트 CLAUDE.md(프로젝트 컨벤션)
 !docs/**/*.md
+!CLAUDE.md
 
 ### OS ###
 .DS_Store
