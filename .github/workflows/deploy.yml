@@ -58,6 +58,15 @@ jobs:
       - name: ECR에 Docker 이미지 Push
         run: docker push ${{ steps.login-ecr.outputs.registry }}/classit-server:latest
 
+      - name: docker-compose.prod.yml 을 EC2로 복사
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          source: docker-compose.prod.yml
+          target: /home/ubuntu/classit
+
       - name: SSH로 EC2에 접속
         uses: appleboy/ssh-action@v1.0.3
         with:
