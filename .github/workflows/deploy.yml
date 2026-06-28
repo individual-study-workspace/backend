@@ -27,7 +27,7 @@ jobs:
 
       - name: GitHub Actions Public IP 얻기
         id: ip
-        uses: haythem/public-ip@v1.3
+        run: echo "ipv4=$(curl -s https://checkip.amazonaws.com)" >> "$GITHUB_OUTPUT"
 
       - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
         uses: aws-actions/configure-aws-credentials@v5
@@ -74,9 +74,10 @@ jobs:
             docker image prune -f
 
       - name: GitHub Actions IP 제거
-        if: always()
+        if: always() && steps.ip.outputs.ipv4 != ''
         run: |
           aws ec2 revoke-security-group-ingress \
+              --region ap-northeast-2 \
               --group-id ${{ secrets.AWS_IAM_GITHUB_ACTIONS_SECURITY_GROUP_ID }} \
               --protocol tcp \
               --port 22 \
