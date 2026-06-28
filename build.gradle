@@ -49,7 +49,7 @@ dependencies {
 	runtimeOnly    'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
 	// OpenAPI / Swagger
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
 
 	// Structured JSON logging
 	implementation 'net.logstash.logback:logstash-logback-encoder:8.0'
