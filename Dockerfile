@@ -3,8 +3,8 @@ FROM eclipse-temurin:21-jdk-alpine
 
 WORKDIR /app
 
-# jar 파일, 컨테이너 최상위 경로로 복사
-COPY build/libs/*SNAPSHOT.jar /app.jar
+# jar 파일, WORKDIR(/app) 안으로 복사 → /app/app.jar
+COPY build/libs/*SNAPSHOT.jar app.jar
 
 # Docker 시간대 설정
 ENV TZ=Asia/Seoul
