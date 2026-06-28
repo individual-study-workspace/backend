@@ -1,10 +1,8 @@
 package com.tutoring;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class TutoringApplicationTests {
+class TutoringApplicationTests extends IntegrationTestBase {
 
 	@Test
 	void contextLoads() {
