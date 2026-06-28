@@ -4,14 +4,14 @@ FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 
 # jar 파일, WORKDIR(/app) 안으로 복사 → /app/app.jar
-COPY build/libs/*SNAPSHOT.jar app.jar
+COPY build/libs/*SNAPSHOT.jar /app.jar
 
 # Docker 시간대 설정
 ENV TZ=Asia/Seoul
 
 
 # 컨테이너 최초 실행 시에 app.jar 실행
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
 
 # 이 프로젝트의 최상위 경로에서 ./gradlew clean build 실행
 # 빌드를 한 파일을 기반으로
