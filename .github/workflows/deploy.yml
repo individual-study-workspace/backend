@@ -19,8 +19,8 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: application.yml 파일 만들기
-        run: echo "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
+      - name: prod 설정 파일 생성 (application-prod.yml — secret 없음, 값은 런타임 env 주입)
+        run: cp ./src/main/resources/application-prod.yml.template ./src/main/resources/application-prod.yml
 
       - name: 테스트 및 빌드
         run: ./gradlew clean build
@@ -53,7 +53,9 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            docker stop classit-server || true
-            docker rm classit-server || true
-            docker pull ${{ steps.login-ecr.outputs.registry }}/classit-server:latest
-            docker run -d --name classit-server -p 80:80 ${{ steps.login-ecr.outputs.registry }}/classit-server:latest
+            cd /home/ubuntu/classit
+            aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+            export ECR_IMAGE=${{ steps.login-ecr.outputs.registry }}/classit-server:latest
+            docker compose -f docker-compose.prod.yml pull app
+            docker compose -f docker-compose.prod.yml up -d
+            docker image prune -f

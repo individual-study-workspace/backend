@@ -41,7 +41,14 @@ out/
 !**/src/main/resources/**/application-*.yml.template
 !**/src/test/resources/**/application*.yml
 !docker-compose.yml
+!docker-compose.prod.yml
 !deploy.yml
+
+### 환경변수 파일 (secret 포함 가능) ###
+.env
+.env.*
+# 예외: 값 없는 예시 파일만 커밋
+!.env.prod.example
 ### Claude Code ###
 *.md
 # 예외: 설계 문서, 운영 가이드, repo 루트 CLAUDE.md(프로젝트 컨벤션)

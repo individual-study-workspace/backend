@@ -1,0 +1,75 @@
+name: classit-prod
+
+# EC2 단일 호스트용 — app(ECR 이미지) + MySQL + Redis 를 한 Compose 네트워크에서 실행.
+# 같은 네트워크라 app 은 DB/Redis 를 서비스명(mysql, redis)으로 접속한다.
+# 실제 값은 같은 디렉터리의 .env 파일에서 주입 (.env 는 git 추적 안 함, .env.prod.example 참고).
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: classit-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME:-tutoring}
+      MYSQL_USER: ${DB_USERNAME:-tutoring}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      TZ: Asia/Seoul
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    # 외부 노출 불필요 (app 만 같은 네트워크로 접근). 호스트에서 직접 디버깅하려면 아래 주석 해제.
+    # ports:
+    #   - "127.0.0.1:3306:3306"
+
+  redis:
+    image: redis:7-alpine
+    container_name: classit-redis
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    # ports:
+    #   - "127.0.0.1:6379:6379"
+
+  app:
+    image: ${ECR_IMAGE}
+    container_name: classit-server
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      # prod 프로필(application-prod.yml)의 ${...} 자리에 주입되는 값들
+      DB_URL: "jdbc:mysql://mysql:3306/${DB_NAME:-tutoring}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8"
+      DB_USERNAME: ${DB_USERNAME:-tutoring}
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      JWT_SECRET: ${JWT_SECRET}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
+      KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+    ports:
+      - "80:80"
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+  redis_data:
