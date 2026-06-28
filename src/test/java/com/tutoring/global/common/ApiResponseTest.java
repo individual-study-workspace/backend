@@ -31,8 +31,8 @@ class ApiResponseTest {
 
         assertThat(response.isSuccess()).isFalse();
         assertThat(response.getData()).isNull();
-        assertThat(response.getError().getCode()).isEqualTo("UNAUTHORIZED");
-        assertThat(response.getError().getMessage()).isEqualTo(ErrorCode.UNAUTHORIZED.getMessage());
+        assertThat(response.getError().code()).isEqualTo("UNAUTHORIZED");
+        assertThat(response.getError().message()).isEqualTo(ErrorCode.UNAUTHORIZED.getMessage());
     }
 
     @Test
@@ -40,7 +40,7 @@ class ApiResponseTest {
         ApiResponse<Void> response = ApiResponse.fail(ErrorCode.VALIDATION_FAILED, "email 형식이 잘못됨");
 
         assertThat(response.isSuccess()).isFalse();
-        assertThat(response.getError().getCode()).isEqualTo("VALIDATION_FAILED");
-        assertThat(response.getError().getMessage()).isEqualTo("email 형식이 잘못됨");
+        assertThat(response.getError().code()).isEqualTo("VALIDATION_FAILED");
+        assertThat(response.getError().message()).isEqualTo("email 형식이 잘못됨");
     }
 }

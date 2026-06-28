@@ -38,11 +38,10 @@ out/
 *.yml
 *.properties
 # 예외: 커밋 대상 yml (secret 없음)
-!**/src/main/resources/**/application.yml
 !**/src/main/resources/**/application-*.yml.template
 !**/src/test/resources/**/application*.yml
 !docker-compose.yml
-
+!deploy.yml
 ### Claude Code ###
 *.md
 # 예외: 설계 문서, 운영 가이드, repo 루트 CLAUDE.md(프로젝트 컨벤션)

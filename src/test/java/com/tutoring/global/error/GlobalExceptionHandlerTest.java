@@ -3,8 +3,6 @@ package com.tutoring.global.error;
 import com.tutoring.global.common.ApiResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.support.WebExchangeBindException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,8 +18,8 @@ class GlobalExceptionHandlerTest {
 
         assertThat(response.getStatusCodeValue()).isEqualTo(404);
         assertThat(response.getBody().isSuccess()).isFalse();
-        assertThat(response.getBody().getError().getCode()).isEqualTo("USER_NOT_FOUND");
-        assertThat(response.getBody().getError().getMessage()).isEqualTo("id=42");
+        assertThat(response.getBody().getError().code()).isEqualTo("USER_NOT_FOUND");
+        assertThat(response.getBody().getError().message()).isEqualTo("id=42");
     }
 
     @Test
@@ -29,6 +27,6 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<ApiResponse<Void>> response = handler.handleUnknown(new RuntimeException("boom"));
 
         assertThat(response.getStatusCodeValue()).isEqualTo(500);
-        assertThat(response.getBody().getError().getCode()).isEqualTo("INTERNAL_ERROR");
+        assertThat(response.getBody().getError().code()).isEqualTo("INTERNAL_ERROR");
     }
 }
