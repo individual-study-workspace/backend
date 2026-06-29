@@ -2,6 +2,13 @@
 
 Spring Boot 3.5.11 + Java 21 백엔드. Flutter 모바일 클라이언트.
 
+## 설정 파일 규칙 (절대 준수)
+
+- **모든 설정은 `src/main/resources/application.yml` 단일 파일로만 관리한다.**
+- `application-local.yml`, `application-prod.yml`, `application-*.yml.template`, 별도 프로파일 yml/properties 등 **추가 설정 파일을 절대 만들지 않는다.**
+- 프로파일 분기(`prod`/`local` 등)로 파일을 쪼개지 않는다. 변경이 필요하면 `application.yml` 안에서 수정한다.
+- Claude 는 위 규칙을 어기고 새 설정 파일을 생성/제안하지 말 것.
+
 ## Git Commit Convention
 
 **MUST follow this format for every commit in this repository.**
