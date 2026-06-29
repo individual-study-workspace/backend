@@ -53,8 +53,6 @@ services:
       redis:
         condition: service_healthy
     environment:
-      SPRING_PROFILES_ACTIVE: prod
-      # prod 프로필(application-prod.yml)의 ${...} 자리에 주입되는 값들
       DB_URL: "jdbc:mysql://mysql:3306/${DB_NAME:-classit-db}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8"
       DB_USERNAME: ${DB_USERNAME:-classit-user}
       DB_PASSWORD: ${DB_PASSWORD}
