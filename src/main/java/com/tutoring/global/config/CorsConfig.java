@@ -18,7 +18,11 @@ public class CorsConfig {
 
         CorsConfiguration cfg = new CorsConfiguration();
         if (!allowedOrigins.isBlank()) {
-            cfg.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+            if ("*".equals(allowedOrigins.trim())) {
+                cfg.setAllowedOriginPatterns(List.of("*"));
+            } else {
+                cfg.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+            }
         }
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         cfg.setAllowedHeaders(List.of("*"));
