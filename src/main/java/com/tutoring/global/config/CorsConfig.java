@@ -17,12 +17,10 @@ public class CorsConfig {
             @Value("${app.cors.allowed-origins:}") String allowedOrigins) {
 
         CorsConfiguration cfg = new CorsConfiguration();
-        if (!allowedOrigins.isBlank()) {
-            if ("*".equals(allowedOrigins.trim())) {
-                cfg.setAllowedOriginPatterns(List.of("*"));
-            } else {
-                cfg.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
-            }
+        if (allowedOrigins.isBlank()) {
+            cfg.setAllowedOriginPatterns(List.of("*"));
+        } else {
+            cfg.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
         }
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         cfg.setAllowedHeaders(List.of("*"));

@@ -20,7 +20,9 @@ jobs:
           java-version: 21
 
       - name: application.yml 생성 (GitHub Secrets)
-        run: echo "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
+        env:
+          APPLICATION_YML: ${{ secrets.APPLICATION_YML }}
+        run: printf '%s\n' "$APPLICATION_YML" > ./src/main/resources/application.yml
 
       - name: 테스트 및 빌드
         run: ./gradlew clean build
