@@ -2,7 +2,7 @@ name: classit-prod
 
 # EC2 단일 호스트용 — app(ECR 이미지) + MySQL + Redis 를 한 Compose 네트워크에서 실행.
 # 같은 네트워크라 app 은 DB/Redis 를 서비스명(mysql, redis)으로 접속한다.
-# 실제 값은 같은 디렉터리의 .env 파일에서 주입 (.env 는 git 추적 안 함, .env.prod.example 참고).
+# 앱 설정/비밀키는 이미지에 구워진 application.yml 에서 관리(.env 는 MySQL 컨테이너용 값만).
 
 services:
   mysql:
@@ -52,18 +52,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    environment:
-      DB_URL: "jdbc:mysql://mysql:3306/${DB_NAME:-classit-db}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8"
-      DB_USERNAME: ${DB_USERNAME:-classit-user}
-      DB_PASSWORD: ${DB_PASSWORD}
-      REDIS_HOST: redis
-      REDIS_PORT: "6379"
-      JWT_SECRET: ${JWT_SECRET}
-      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
-      KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET}
-      CORS_ORIGINS: ${CORS_ORIGINS}
+    # 모든 앱 설정/비밀키는 이미지에 구워진 application.yml 에서 직접 관리한다.
+    # (배포 시 GitHub Secrets 의 APPLICATION_YML 로 생성됨 — deploy.yml 참고)
     ports:
       - "8080:8080"
     restart: unless-stopped
