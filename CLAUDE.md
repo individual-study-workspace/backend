@@ -20,6 +20,10 @@ Git에 커밋할 때는 해당 스킬을 반드시 사용한다
 
 ## 개발 진행 방식 (TDD 사용 X)
 
+- **방법론은 BMad Method 로 통일한다.** superpowers 플러그인·bkit 은 이 프로젝트에서 **사용하지 않는다.** (Claude 도 superpowers 의 brainstorm→plan→execute 대신 BMad 흐름을 따를 것)
+- **계획/설계 문서는 `_bmad-output/planning-artifacts/` 에 저장하고 Git에 커밋한다.**
+  - 구현 중 임시 산출물은 `_bmad-output/implementation-artifacts/` — **커밋 제외.**
+  - BMad 프레임워크 본체 `_bmad/` 도 **커밋 제외** (설치형 도구, 팀원 각자 로컬 설치).
 - 빠른 개발을 위해 **TDD(테스트 먼저 작성) 방식을 사용하지 않는다.** (기존 코드에 TDD 코드가 있을 경우 삭제)
 - TDD 대신 **"계획 문서를 안전벨트로 삼는"** 방식으로 개발한다. 상세 규칙은 아래 문서를 반드시 참고한다.
   - **[팀 개발 워크플로우](./docs/팀-개발-워크플로우.md)** — 표준 개발 흐름·Story 쪼개기·테스트 정책·협업 규칙 (실무 가이드)
