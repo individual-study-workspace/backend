@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "common_code")
+@Table(name = "code_management")
 @IdClass(CodeManagementId.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
