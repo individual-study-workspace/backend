@@ -33,7 +33,14 @@ public class ClassroomServiceImpl implements ClassroomService {
 
     @Override
     public InviteCodeResponse generateInviteCode() {
-        return InviteCodeResponse.of(generateUniqueInviteCode());
+        for (int i = 0; i < INVITE_CODE_MAX_RETRY; i++) {
+            String code = randomCode();
+            // DB에 이미 존재하는지 검증 후, 미사용 코드만 발급한다
+            if (!classroomRepository.existsByInviteCode(code)) {
+                return InviteCodeResponse.of(code);
+            }
+        }
+        throw new ApiException(ErrorCode.INVITE_CODE_GENERATION_FAILED);
     }
 
     @Override
@@ -95,16 +102,6 @@ public class ClassroomServiceImpl implements ClassroomService {
                 }
             }
         }
-    }
-
-    private String generateUniqueInviteCode() {
-        for (int i = 0; i < INVITE_CODE_MAX_RETRY; i++) {
-            String code = randomCode();
-            if (!classroomRepository.existsByInviteCode(code)) {
-                return code;
-            }
-        }
-        throw new ApiException(ErrorCode.INVITE_CODE_GENERATION_FAILED);
     }
 
     private String randomCode() {
