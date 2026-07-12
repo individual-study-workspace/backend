@@ -28,6 +28,7 @@ public enum ErrorCode {
 
     // Classroom
     CLASSROOM_INVALID_BILLING_POLICY(HttpStatus.BAD_REQUEST, "청구정책 입력이 유효하지 않습니다"),
+    INVITE_CODE_DUPLICATE(HttpStatus.CONFLICT, "이미 사용 중인 초대코드입니다"),
     INVITE_CODE_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "초대코드 생성에 실패했습니다");
 
     private final HttpStatus status;

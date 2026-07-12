@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
@@ -26,6 +27,10 @@ public record CreateClassroomRequest(
     @JsonFormat(pattern = "HH:mm") LocalTime fromTime,
     @Positive Short totalSessions,
     @Size(max = 500) String remark,
+    // 초대코드는 FE가 GET /api/v1/classrooms/invite-code 로 발급받아 그대로 전달한다
+    @NotBlank
+    @Pattern(regexp = "^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{8}$", message = "초대코드 형식이 올바르지 않습니다")
+    String inviteCode,
     @NotNull @Valid BillingPolicyRequest billingPolicy
 ) {
     public record BillingPolicyRequest(

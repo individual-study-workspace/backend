@@ -29,6 +29,7 @@ class SwaggerEndpointIntegrationTest extends IntegrationTestBase {
             // ClassroomApi 인터페이스의 @Operation/@Tag 가 문서에 반영된다
             .andExpect(jsonPath("$.paths['/api/v1/classrooms'].post.summary").value("강의실 생성"))
             .andExpect(jsonPath("$.paths['/api/v1/classrooms'].post.tags[0]").value("Classroom"))
+            .andExpect(jsonPath("$.paths['/api/v1/classrooms/invite-code'].get.summary").value("초대코드 발급"))
             .andExpect(jsonPath("$.components.schemas.CreateClassroomRequest").exists())
             // @AuthenticationPrincipal 파라미터는 문서에 노출되지 않는다
             .andExpect(jsonPath("$.components.schemas.CustomUserPrincipal").doesNotExist());

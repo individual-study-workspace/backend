@@ -3,6 +3,7 @@ package com.tutoring.domain.classroom.service;
 import com.tutoring.domain.classroom.dto.ClassroomResponse;
 import com.tutoring.domain.classroom.dto.CreateClassroomRequest;
 import com.tutoring.domain.classroom.dto.CreateClassroomRequest.BillingPolicyRequest;
+import com.tutoring.domain.classroom.dto.InviteCodeResponse;
 import com.tutoring.domain.classroom.entity.BillingPolicy;
 import com.tutoring.domain.classroom.entity.ClassType;
 import com.tutoring.domain.classroom.entity.Classroom;
@@ -31,13 +32,23 @@ public class ClassroomServiceImpl implements ClassroomService {
     private final SecureRandom random = new SecureRandom();
 
     @Override
+    public InviteCodeResponse generateInviteCode() {
+        return InviteCodeResponse.of(generateUniqueInviteCode());
+    }
+
+    @Override
     @Transactional
     public ClassroomResponse create(Long creatorId, CreateClassroomRequest request) {
         BillingPolicyRequest billing = request.billingPolicy();
         validateBillingPolicy(billing);
 
+        // 초대코드는 FE가 발급받아 전달한 값을 저장한다 (유니크 검증)
+        String inviteCode = request.inviteCode();
+        if (classroomRepository.existsByInviteCode(inviteCode)) {
+            throw new ApiException(ErrorCode.INVITE_CODE_DUPLICATE);
+        }
+
         ClassType classType = request.classType() != null ? request.classType() : ClassType.ONLINE;
-        String inviteCode = generateUniqueInviteCode();
 
         Classroom classroom = Classroom.create(
             creatorId,
