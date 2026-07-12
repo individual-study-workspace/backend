@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <springProfile name="local">
-        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder>
-                <pattern>%d{HH:mm:ss.SSS} %-5level [%X{traceId:-}] [%X{userId:-}] %logger{36} - %msg%n</pattern>
-            </encoder>
-        </appender>
-        <root level="INFO">
-            <appender-ref ref="CONSOLE"/>
-        </root>
-        <logger name="com.tutoring" level="DEBUG"/>
-    </springProfile>
+    <!-- 평문 콘솔 — local 및 프로파일 미지정(default) 시 사용 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level [%X{traceId:-}] [%X{userId:-}] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
+    <!-- prod / test: JSON 로그 -->
     <springProfile name="prod | test">
         <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
             <encoder class="net.logstash.logback.encoder.LogstashEncoder">
@@ -23,6 +19,14 @@
         <root level="INFO">
             <appender-ref ref="JSON"/>
         </root>
+    </springProfile>
+
+    <!-- local 및 default(프로파일 미지정): 평문 콘솔 -->
+    <springProfile name="local | default">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+        <logger name="com.tutoring" level="DEBUG"/>
     </springProfile>
 
 </configuration>

@@ -19,8 +19,10 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: prod 설정 파일 생성 (application-prod.yml — secret 없음, 값은 런타임 env 주입)
-        run: cp ./src/main/resources/application-prod.yml.template ./src/main/resources/application-prod.yml
+      - name: application.yml 생성 (GitHub Secrets)
+        env:
+          APPLICATION_YML: ${{ secrets.APPLICATION_YML }}
+        run: printf '%s\n' "$APPLICATION_YML" > ./src/main/resources/application.yml
 
       - name: 테스트 및 빌드
         run: ./gradlew clean build
