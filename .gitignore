@@ -58,3 +58,10 @@ out/
 ### OS ###
 .DS_Store
 Thumbs.db
+
+### BMad Method (설치형 도구 — 각자 로컬 설치) ###
+_bmad/
+_bmad-output/implementation-artifacts/
+# 예외: 팀 공유용 계획 산출물만 커밋
+!_bmad-output/planning-artifacts/
+!_bmad-output/planning-artifacts/**
