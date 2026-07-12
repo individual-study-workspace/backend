@@ -4,10 +4,10 @@ services:
     image: mysql:8.0
     container_name: tutoring-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: tutoring
-      MYSQL_USER: tutoring
-      MYSQL_PASSWORD: tutoring
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME:-classit-db}
+      MYSQL_USER: ${DB_USERNAME:-classit-user}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
       TZ: Asia/Seoul
     ports:
       - "3306:3306"
