@@ -5,6 +5,7 @@ import com.tutoring.global.common.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -38,6 +39,13 @@ public class GlobalExceptionHandler {
             ErrorCode.VALIDATION_FAILED.getMessage(),
             details);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.fail(error));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNotReadable(HttpMessageNotReadableException ex) {
+        log.info("Malformed request body: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponse.fail(ErrorCode.INVALID_INPUT));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
