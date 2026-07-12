@@ -54,8 +54,35 @@ services:
         condition: service_healthy
     # 모든 앱 설정/비밀키는 이미지에 구워진 application.yml 에서 직접 관리한다.
     # (배포 시 GitHub Secrets 의 APPLICATION_YML 로 생성됨 — deploy.yml 참고)
+    # 외부 노출은 nginx 만 담당. app 은 호스트 localhost 로만 열어 디버깅용으로 남긴다.
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: classit-nginx
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro       # 프록시/SSL 설정 (repo → SCP 로 배포)
+      - ./certbot/conf:/etc/letsencrypt:ro        # 발급된 인증서 (호스트에 영속)
+      - ./certbot/www:/var/www/certbot:ro         # ACME challenge webroot
+    # 6시간마다 reload → 갱신된 인증서 자동 반영
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    restart: unless-stopped
+
+  certbot:
+    image: certbot/certbot
+    container_name: classit-certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    # 12시간마다 갱신 시도 (만료 30일 이내일 때만 실제 갱신). nginx 가 webroot 로 challenge 응답.
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done'"
     restart: unless-stopped
 
 volumes:
