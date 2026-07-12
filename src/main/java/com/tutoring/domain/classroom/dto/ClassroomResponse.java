@@ -13,6 +13,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+/**
+ * 강의실 생성 결과 응답. 강의실 정보와 청구정책(중첩)을 함께 담는다.
+ * 엔티티를 직접 노출하지 않고 {@link #of} 로 변환해 반환한다.
+ */
 public record ClassroomResponse(
     Long id,
     String name,
@@ -28,6 +32,13 @@ public record ClassroomResponse(
     Instant createdAt,
     BillingPolicyResponse billingPolicy
 ) {
+    /**
+     * 강의실·청구정책 엔티티를 응답 DTO로 변환한다.
+     *
+     * @param classroom     저장된 강의실 엔티티
+     * @param billingPolicy 저장된 청구정책 엔티티
+     * @return 변환된 응답
+     */
     public static ClassroomResponse of(Classroom classroom, BillingPolicy billingPolicy) {
         return new ClassroomResponse(
             classroom.getId(),
@@ -46,12 +57,14 @@ public record ClassroomResponse(
         );
     }
 
+    /** 응답에 포함되는 청구정책 정보. */
     public record BillingPolicyResponse(
         PaymentType paymentType,
         Short billingDay,
         Short billingUnit,
         Integer amount
     ) {
+        /** 청구정책 엔티티를 응답 DTO로 변환한다. */
         public static BillingPolicyResponse from(BillingPolicy policy) {
             return new BillingPolicyResponse(
                 policy.getPaymentType(),

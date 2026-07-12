@@ -15,6 +15,10 @@ import java.util.stream.Collectors;
 @Converter
 public class ClassDaysConverter implements AttributeConverter<List<DayOfWeek>, String> {
 
+    /**
+     * 엔티티 → DB. 요일 목록을 3글자 약어 CSV 로 변환한다 (예: [MONDAY, WEDNESDAY] → "MON,WED").
+     * 비었거나 null 이면 컬럼에 null 을 저장한다.
+     */
     @Override
     public String convertToDatabaseColumn(List<DayOfWeek> days) {
         if (days == null || days.isEmpty()) {
@@ -25,6 +29,10 @@ public class ClassDaysConverter implements AttributeConverter<List<DayOfWeek>, S
             .collect(Collectors.joining(","));
     }
 
+    /**
+     * DB → 엔티티. CSV 문자열을 요일 목록으로 복원한다 (예: "MON,WED" → [MONDAY, WEDNESDAY]).
+     * null·빈 문자열이면 빈 목록을 반환한다.
+     */
     @Override
     public List<DayOfWeek> convertToEntityAttribute(String dbData) {
         if (dbData == null || dbData.isBlank()) {
@@ -37,6 +45,7 @@ public class ClassDaysConverter implements AttributeConverter<List<DayOfWeek>, S
             .toList();
     }
 
+    /** 3글자 약어(MON, TUE …)를 {@link DayOfWeek} 로 매핑한다. 매칭되는 요일이 없으면 예외. */
     private static DayOfWeek toDayOfWeek(String abbr) {
         String upper = abbr.toUpperCase();
         for (DayOfWeek d : DayOfWeek.values()) {
